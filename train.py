@@ -38,14 +38,6 @@ def get_vgg():
     return model
 
 
-class VGG(Model):
-    def __init__(self) -> None:
-        self.model = get_vgg()
-
-    def forward(self, image: np.ndarray) -> int:
-        return self.image
-
-
 def collate(batch):
     img, label = zip(*batch)
     img = torch.stack(img)
