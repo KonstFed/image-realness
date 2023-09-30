@@ -8,7 +8,6 @@ from sklearn.metrics import f1_score, accuracy_score
 
 from dataset import CustomDataset, get_datasets, get_full_dataset
 from depth import Model
-from bor20 import LivenessNet
 
 import warnings
 
@@ -65,7 +64,7 @@ def get_loaders():
             transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ]
     )
-    train_d = get_full_dataset("datasets/test_faces_dataset", transform=transform)
+    train_d = get_full_dataset("datasets/final_dataset", transform=transform)
     val_d = get_full_dataset("datasets/validation_faces_dataset", transform=transform)
 
     train_loaders = DataLoader(
