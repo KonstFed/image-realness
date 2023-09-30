@@ -1,5 +1,6 @@
 import numpy as np
 import face_recognition
+import cv2
 
 def crop_face(image: np.ndarray) -> np.ndarray:
     faces = face_recognition.face_locations(image)
@@ -14,3 +15,19 @@ def crop_face(image: np.ndarray) -> np.ndarray:
     # final = Image.fromarray(faceImage)
 
     return faceImage
+
+
+def crop_resize(image, resize_to=300):
+    faces = face_recognition.face_locations(image)
+    
+    if len(faces):
+        top, right, bottom, left = faces[0]
+        image = image[top:bottom, left:right]
+    
+    image = cv2.resize(image, [resize_to, int(resize_to * image.shape[0] / image.shape[1])])
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    return image
+
+if __name__ == "__main__":
+    import os
+    os.makedirs("datasets/")

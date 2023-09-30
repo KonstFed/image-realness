@@ -1,7 +1,7 @@
 from sklearn.metrics import f1_score, accuracy_score
 from tqdm import trange
 
-from depth import Model
+from depth import Model, SVC
 from dataset import get_full_dataset, CustomDataset
 
 def test(model: Model, test_d: CustomDataset):
@@ -17,6 +17,6 @@ def test(model: Model, test_d: CustomDataset):
     print("f1-score", f1_score(labels, predictions))
 
 if __name__ == "__main__":
-    model = Model(load_path="weights/svc.joblib")
+    model = SVC(load_path="weights/svc.joblib")
     test_d = get_full_dataset("validation_data")
     test(model, test_d)

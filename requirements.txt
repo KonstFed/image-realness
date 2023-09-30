@@ -1,1 +1,8 @@
 scikit-image
+scikit-learn
+face-recognition
+tqdm
+opencv-python
+torch
+torchvision
+matplotlib
