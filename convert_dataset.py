@@ -19,7 +19,7 @@ def _save(img: np.ndarray, path: str):
     p_img = Image.fromarray(img)
     p_img.save(path)
 
-OUT_PATH = "datasets/test_faces_dataset"
+OUT_PATH = "datasets/validation_faces_dataset"
 
 def convert_single(obj):
     path, label = obj
@@ -41,4 +41,4 @@ def convert(path: str, out: str):
 
 
 if __name__ == "__main__":
-    convert("datasets/test_dataset", "datasets/test_faces_dataset")
+    convert("datasets/validation_data", "datasets/test_faces_dataset")
