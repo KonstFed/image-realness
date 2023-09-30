@@ -11,11 +11,13 @@ from depth import Model
 from tests import test
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 BATCH_SIZE = 32
+EPOCH = 10
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(device)
 # model = torch.hub.load("pytorch/vision:v0.10.0", "vgg11_bn", pretrained=True)
 
@@ -32,7 +34,7 @@ def get_model():
         nn.Linear(4096, 1000),
         nn.ReLU(inplace=True),
         nn.Linear(1000, 1),
-        nn.Sigmoid()
+        nn.Sigmoid(),
     )
     return model
 
@@ -43,8 +45,8 @@ class VGG(Model):
 
     def forward(self, image: np.ndarray) -> int:
         return self.image
-    
-    
+
+
 def collate(batch):
     img, label = zip(*batch)
     img = torch.stack(img)
@@ -56,11 +58,12 @@ def collate(batch):
 
 
 def get_loaders():
-    transform = transforms.Compose([
-        transforms.Resize([224, 224]),
-        transforms.ToTensor(),
-        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-    ]
+    transform = transforms.Compose(
+        [
+            transforms.Resize([224, 224]),
+            transforms.ToTensor(),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+        ]
     )
     train_d = get_full_dataset("datasets/test_faces_dataset", transform=transform)
     val_d = get_full_dataset("datasets/validation_faces_dataset", transform=transform)
@@ -72,6 +75,7 @@ def get_loaders():
         val_d, num_workers=1, batch_size=BATCH_SIZE, collate_fn=collate
     )
     return train_loaders, val_loaders
+
 
 def train_epoch(model, loader, optimizer, loss, epoch_number):
     model.train()
@@ -88,7 +92,8 @@ def train_epoch(model, loader, optimizer, loss, epoch_number):
         all_loss += c_loss.item()
 
         bar.set_postfix({"loss": all_loss / i})
-        
+
+
 def count_metrics(model, loader, loss):
     model.eval()
     bar = tqdm(loader)
@@ -104,26 +109,32 @@ def count_metrics(model, loader, loss):
             all_loss += c_loss.item()
             predicted += torch.round(predictions).tolist()
             actual += target.tolist()
-            
+
             bar.set_postfix({"loss": all_loss / i})
     f1 = f1_score(actual, predicted)
     acc = accuracy_score(actual, predicted)
     print(f"Validation\nf1: {f1}, acc: {acc}")
     return f1
-    
+
 
 def train(model):
     model.to(device)
     loss = nn.BCELoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.8)
-    epoch = 10
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.6)
+    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9)
     train_l, val_l = get_loaders()
-    for i in range(epoch):
-        train_epoch(model, train_l, optimizer, loss, i+1)
-        count_metrics(model, val_l, loss)
+    best_score = -np.inf
+    for i in range(EPOCH):
+        train_epoch(model, train_l, optimizer, loss, i + 1)
+        score = count_metrics(model, val_l, loss)
+        if score > best_score:
+            torch.save(model.state_dict(), "weights/best.pt")
+            best_score = score
+        scheduler.step()
 
 if __name__ == "__main__":
     import multiprocessing as mp
-    mp.set_start_method('spawn')
+
+    mp.set_start_method("spawn")
 
     train(get_model())
