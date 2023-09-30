@@ -8,7 +8,6 @@ from sklearn.metrics import f1_score, accuracy_score
 
 from dataset import CustomDataset, get_datasets, get_full_dataset
 from depth import Model
-from tests import test
 
 import warnings
 
@@ -18,22 +17,22 @@ BATCH_SIZE = 32
 EPOCH = 10
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print(device)
+# print(device)
 # model = torch.hub.load("pytorch/vision:v0.10.0", "vgg11_bn", pretrained=True)
 
 
 def get_model():
     model = torch.hub.load("pytorch/vision:v0.10.0", "vgg11", pretrained=True)
 
-    for param in model.features.parameters():
-        param.require_grad = False
+    # for param in model.features.parameters():
+    #     param.require_grad = False
 
     model.classifier = nn.Sequential(
         nn.Linear(25088, 4096),
         nn.ReLU(inplace=True),
-        nn.Linear(4096, 1000),
+        nn.Linear(4096, 4096),
         nn.ReLU(inplace=True),
-        nn.Linear(1000, 1),
+        nn.Linear(4096, 1),
         nn.Sigmoid(),
     )
     return model
@@ -69,10 +68,10 @@ def get_loaders():
     val_d = get_full_dataset("datasets/validation_faces_dataset", transform=transform)
 
     train_loaders = DataLoader(
-        train_d, num_workers=1, batch_size=BATCH_SIZE, collate_fn=collate, shuffle=True
+        train_d, num_workers=2, batch_size=BATCH_SIZE, collate_fn=collate, shuffle=True
     )
     val_loaders = DataLoader(
-        val_d, num_workers=1, batch_size=BATCH_SIZE, collate_fn=collate
+        val_d, num_workers=2, batch_size=BATCH_SIZE, collate_fn=collate
     )
     return train_loaders, val_loaders
 
@@ -131,6 +130,7 @@ def train(model):
             torch.save(model.state_dict(), "weights/best.pt")
             best_score = score
         scheduler.step()
+
 
 if __name__ == "__main__":
     import multiprocessing as mp
