@@ -25,7 +25,7 @@ def crop_resize(image, resize_to=300):
         image = image[top:bottom, left:right]
     
     image = cv2.resize(image, [resize_to, int(resize_to * image.shape[0] / image.shape[1])])
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
 
 if __name__ == "__main__":

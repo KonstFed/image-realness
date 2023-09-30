@@ -27,6 +27,7 @@ class VGG(Model):
 
     def forward(self, image: Image) -> bool:
         image = crop_resize(np.array(image))
+        self.cropped_img_ = image.copy()
         image = Image.fromarray(image)
         image = self.transform(image)
         image = torch.reshape(image, [1] + [*image.shape])
