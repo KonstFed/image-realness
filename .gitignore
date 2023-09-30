@@ -1,4 +1,5 @@
 weights/*
+datasets/*
 test_dataset
 validation_data
 # Byte-compiled / optimized / DLL files

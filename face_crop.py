@@ -30,4 +30,6 @@ def crop_resize(image, resize_to=300):
 
 if __name__ == "__main__":
     import os
-    os.makedirs("datasets/")
+    os.makedirs("datasets/test_dataset_faces/fake")
+    os.makedirs("datasets/test_dataset_faces/living")
+    

@@ -67,7 +67,7 @@ def get_datasets(dataset_path: str, train_test_ratio=0.1, resize=None, transform
     return train_d, test_d
 
 
-def get_full_dataset(dataset_path: str, resize=300, transform=None):
+def get_full_dataset(dataset_path: str, resize=None, transform=None):
     living_names = os.listdir(os.path.join(dataset_path, "living"))
     fake_names = os.listdir(os.path.join(dataset_path, "fake"))
 
@@ -89,10 +89,7 @@ def get_full_dataset(dataset_path: str, resize=300, transform=None):
 
 
 if __name__ == "__main__":
-    # train_d, test_d = get_datasets("validation_data")
-    train_d = get_full_dataset("test_dataset")
-    print(train_d[0][1])
-    import matplotlib.pyplot as plt
-    plt.imshow(train_d[-1][0])
-    plt.show()
-    print(train_d[-1][1])
+    import os
+    os.makedirs("datasets/test_dataset_faces/fake")
+    os.makedirs("datasets/test_dataset_faces/living")
+    
