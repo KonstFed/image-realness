@@ -16,14 +16,25 @@ def _resize_with_ratio(image: np.ndarray, size: int) -> np.ndarray:
 
 class CustomDataset(Dataset):
     # 1 for living, 0 for fake
-    def __init__(self, data_paths: list[str], labels: list[int],
-                 resize: int=None, transform=None) -> None:
+    def __init__(
+        self,
+        data_paths: list[str],
+        labels: list[int],
+        resize: int = None,
+        transform=None,
+        in_memory=False,
+    ) -> None:
         assert len(data_paths) == len(labels)
         self.data = [(data_paths[i], labels[i]) for i in range(len(data_paths))]
         self._resize = resize
         self.transform = transform
+        self.in_memory = in_memory
+        if in_memory:
+            self.stored = [None for _ in range(len(data))]
 
     def __getitem__(self, index) -> tuple[np.ndarray, int]:
+        if self.in_memory and self.stored[index] is not None:
+            return self.stored[index]
         img = Image.open(self.data[index][0])
         img = img.convert("RGB")
         if self._resize:
@@ -31,6 +42,9 @@ class CustomDataset(Dataset):
 
         if self.transform:
             img = self.transform(img)
+        
+        if self.in_memory:
+            self.stored[index] = (img, self.data[index][1])
 
         return img, self.data[index][1]
 
@@ -90,6 +104,6 @@ def get_full_dataset(dataset_path: str, resize=None, transform=None):
 
 if __name__ == "__main__":
     import os
+
     os.makedirs("datasets/test_dataset_faces/fake")
     os.makedirs("datasets/test_dataset_faces/living")
-    

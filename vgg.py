@@ -130,7 +130,7 @@ def train(model):
             torch.save(model.state_dict(), "weights/best.pt")
             best_score = score
         scheduler.step()
-
+    print("Best f1-score: ", best_score)
 
 if __name__ == "__main__":
     import multiprocessing as mp
