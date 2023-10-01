@@ -7,7 +7,7 @@ from PIL import Image
 from infer import VGG
 
 
-model = VGG("weights/best.pt")
+model = VGG("weights/vgg.pt")
 app = FastAPI()
 
 lab2human = {-1: "empty", 0: "fake", 1: "real"}

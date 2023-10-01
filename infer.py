@@ -61,7 +61,7 @@ class VGG(Model):
 
     def forward(self, image: Image.Image | list[Image.Image]) -> int:
 
-        image = crop_resize(np.array(image))
+        image = crop_resize_deploy(np.array(image))
         if image is None:
             return -1
         self.cropped_img_ = image.copy()

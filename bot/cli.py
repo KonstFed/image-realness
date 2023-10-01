@@ -34,7 +34,7 @@ image_files = [("files", open(x, "rb")) for x in full_pathes]
 response = requests.post(api_url, files=image_files)
 r_json = response.json()
 print(r_json)
-with open("out.csv", "w", newline='') as csvfile:
+with open("Innobots.csv", "w", newline='') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=',')
     for i, label in enumerate(r_json["msg"]):
         spamwriter.writerow([pathes[i], label])
