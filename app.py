@@ -22,7 +22,6 @@ async def upload_images(files: list[UploadFile] = File(...)):
     for i, file in enumerate(files):
         try:
             contents = file.file.read()
-            print("content type", type(contents))
             img = Image.open(io.BytesIO(contents))
             # label = model.forward(img)
             imgs.append(img)
@@ -31,6 +30,7 @@ async def upload_images(files: list[UploadFile] = File(...)):
             return JSONResponse(
                 content={"message": f"{i+1} image is not valid"}, status_code=400
             )
+    imgs[0].save("aaaaaa.jpg")
     labels = model.batch_forward(imgs)
     out = {
         "msg": list(map(lambda x: lab2human[x], labels)),

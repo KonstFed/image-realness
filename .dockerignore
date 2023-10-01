@@ -1,0 +1,14 @@
+test_images
+BytesIO
+datasets
+super_dataset
+datasets
+.venv
+__pycache__
+*.zip
+bot
+.git
+.gitignore
+.dockerignore
+weights/best.pt.backup
+weights/svc.joblib

@@ -2,6 +2,10 @@ weights/*
 datasets/*
 test_dataset
 validation_data
+super_dataset/*
+test_images
+bot/secret.json
+*.csv
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

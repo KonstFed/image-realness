@@ -16,13 +16,26 @@ def crop_face(image: np.ndarray) -> np.ndarray:
 
     return faceImage
 
-
 def crop_resize(image, resize_to=300):
     faces = face_recognition.face_locations(image)
     
     if len(faces):
         top, right, bottom, left = faces[0]
         image = image[top:bottom, left:right]
+    
+    image = cv2.resize(image, [resize_to, int(resize_to * image.shape[0] / image.shape[1])])
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    return image
+
+
+def crop_resize_deploy(image, resize_to=300):
+    faces = face_recognition.face_locations(image)
+    
+    if len(faces):
+        top, right, bottom, left = faces[0]
+        image = image[top:bottom, left:right]
+    else:
+        return None
     
     image = cv2.resize(image, [resize_to, int(resize_to * image.shape[0] / image.shape[1])])
     # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

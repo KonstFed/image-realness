@@ -1,4 +1,3 @@
-scikit-image
 scikit-learn
 face-recognition
 tqdm
@@ -6,4 +5,5 @@ opencv-python
 torch
 torchvision
 matplotlib
-fastapi[all]
+fastapi
+uvicorn[standard]

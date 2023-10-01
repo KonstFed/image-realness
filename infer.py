@@ -5,7 +5,7 @@ from PIL import Image
 
 from depth import Model
 from train import get_vgg
-from face_crop import crop_resize
+from face_crop import crop_resize_deploy
 
 
 class VGG(Model):
@@ -32,13 +32,15 @@ class VGG(Model):
         empty_indx = []
         cropped = []
         for i, image in enumerate(images):
-            c_cropped = crop_resize(np.array(image))
+            c_cropped = crop_resize_deploy(np.array(image))
             if c_cropped is None:
                 empty_indx.append(i)
             else:
                 c_cropped = Image.fromarray(c_cropped)
                 c_cropped = self.transform(c_cropped)
                 cropped.append(c_cropped)
+        if len(cropped) == 0:
+            return [-1 for _ in range(len(empty_indx))]
         batch = torch.stack(cropped)
         batch = batch.to(self.device)
         predictions = [-2 for _ in range(len(images))]
@@ -78,5 +80,5 @@ if __name__ == "__main__":
 
     model = VGG("weights/best.pt")
     data = [Image.open("test_images/3d_mask.jpg"), Image.open("test_images/real.jpg")]
-    print(model.batch_forward(data))
+    print(model.batch_forward(data[:1]))
     
