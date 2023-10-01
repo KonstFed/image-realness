@@ -3,6 +3,7 @@ import os
 import requests
 import csv
 import re
+import time
 
 from PIL import Image
 
@@ -27,7 +28,7 @@ api_url = "http://localhost:5000/process_images"
 
 # image_files = [("files", open("test_images/3d_mask.jpg", "rb")),
 #                ("files", open("test_images/real.jpg", "rb"))]
-
+b_t = time.time()
 image_files = [("files", open(x, "rb")) for x in full_pathes]
 
 response = requests.post(api_url, files=image_files)
@@ -38,3 +39,5 @@ with open("out.csv", "w", newline='') as csvfile:
     for i, label in enumerate(r_json["msg"]):
         spamwriter.writerow([pathes[i], label])
 
+e_t = time.time()
+print("All processed with", e_t - b_t, "seconds")
